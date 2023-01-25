@@ -16,8 +16,8 @@ def iframeextractionvideo(videopath, trgpath):
         videos = os.listdir(srcfolderpath)
         videos = cfg.ds_rm(videos)
         for i, video in enumerate(videos):
-            videopath = os.path.join(srcfolderpath, video)
-            command = f"ffmpeg -skip_frame nokey -i {videopath} -vsync vfr -frame_pts true -x264opts no-deblock {trgfolder}/video{i}out%d.bmp"
+            videopathfile = os.path.join(srcfolderpath, video)
+            command = f"ffmpeg -skip_frame nokey -i {videopathfile} -vsync vfr -frame_pts true -x264opts no-deblock {trgfolder}/video{i}out%d.bmp"
             os.system(command=command)
 
 
