@@ -20,6 +20,8 @@ def ds_rm(array: list):
     except Exception as e:
         print(e)
 
+    return array
+
 def creatdir(path):
     try:
         os.makedirs(path)
