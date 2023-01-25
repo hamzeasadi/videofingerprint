@@ -4,12 +4,23 @@ import conf as cfg
 
 
 
-def iframeextractionvideo(videopath):
+def iframeextractionvideo(videopath, trgpath):
     # command = f"ffmpeg -skip_frame nokey -i {videopath} -vsync 0 -frame_pts true {filepath}out%d.png"
     nn = cfg.paths['data']
-    command = f"ffmpeg -skip_frame nokey -i {videopath} -vsync vfr -frame_pts true -x264opts no-deblock {nn}/out%d.bmp"
+    srcfolders = os.listdir(videopath)
+    srcfolders = cfg.ds_rm(srcfolders)
+    for srcfolder in srcfolders:
+        trgfolder = os.path.join(trgpath, srcfolder)
+        srcfolderpath = os.path.join(videopath, srcfolder)
+        cfg.creatdir(trgfolder)
+        videos = os.listdir(srcfolderpath)
+        videos = cfg.ds_rm(videos)
+        for i, video in enumerate(videos):
+            videopath = os.path.join(srcfolderpath, video)
+            command = f"ffmpeg -skip_frame nokey -i {videopath} -vsync vfr -frame_pts true -x264opts no-deblock {trgfolder}/video{i}out%d.bmp"
+            os.system(command=command)
 
-    os.system(command=command)
+
 
 
 
