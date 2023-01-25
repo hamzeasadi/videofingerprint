@@ -1,0 +1,26 @@
+import cv2
+import os
+import conf as cfg
+
+
+
+def iframeextractionvideo(videopath):
+    # command = f"ffmpeg -skip_frame nokey -i {videopath} -vsync 0 -frame_pts true {filepath}out%d.png"
+    nn = cfg.paths['data']
+    command = f"ffmpeg -skip_frame nokey -i {videopath} -vsync vfr -frame_pts true -x264opts no-deblock {nn}/out%d.bmp"
+
+    os.system(command=command)
+
+
+
+
+
+
+def main():
+    # path = '/Volumes/myDrive/Datasets/visionDataset copy/D01_Samsung_GalaxyS3Mini/D01_V_flat_move_0001.mp4'
+    # path = 'D09_V_indoor_move_0001.mov'
+    path = 'D01_V_flat_move_0001.mp4'
+    iframeextractionvideo(videopath=path)
+
+if __name__ == '__main__':
+    main()
