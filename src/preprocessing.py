@@ -30,8 +30,11 @@ def iframeextractionvideo(videopath, trgpath):
 def main():
     # path = '/Volumes/myDrive/Datasets/visionDataset copy/D01_Samsung_GalaxyS3Mini/D01_V_flat_move_0001.mp4'
     # path = 'D09_V_indoor_move_0001.mov'
-    path = 'D01_V_flat_move_0001.mp4'
-    iframeextractionvideo(videopath=path)
+    # path = 'D01_V_flat_move_0001.mp4'
+    # iframeextractionvideo(videopath=path)
+    srcpath = cfg.paths['videos']
+    trgpath = cfg.paths['iframes']
+    iframeextractionvideo(videopath=srcpath, trgpath=trgpath)
 
 if __name__ == '__main__':
     main()

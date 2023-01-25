@@ -9,11 +9,7 @@ data = os.path.join(root, 'data')
 paths = dict(
     root=root, data=data, model=os.path.join(data, 'model'), 
     videos=os.path.join(data, 'videos'), iframes=os.path.join(data, 'iframes'),
-    paths=os.path.join(data, 'patches'),
-    srcvideospath='/Volumes/myDrive/Datasets/visionDataset copy',
-    srciframespath='/Volumes/myDrive/Datasets/visionDatasetnonstbl/iframes',
-    srcpathces='/Volumes/myDrive/Datasets/visionDatasetnonstbl/patches',
-    srcallpathces='/Volumes/myDrive/Datasets/visionDatasetnonstbl/allpatches',
+    patches=os.path.join(data, 'patches'),
 
 )
 
