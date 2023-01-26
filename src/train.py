@@ -16,6 +16,8 @@ def train(net: nn.Module, opt: optim.Optimizer, train_data: DataLoader, val_data
         trainloss = engine.train_step(model=net, data=train_data, criterion=criterion, optimizer=opt)
         valloss = engine.val_step(model=net, data=val_data, criterion=criterion)
         print(f"epoch={epoch}, trainloss={trainloss}, valloss={valloss}")
+        fname=f'{modelname}_{epoch}.pt'
+        kt.save_ckp(model=net, opt=opt, epoch=epoch, minerror=1, fname=fname)
 
 
 
@@ -24,7 +26,11 @@ def train(net: nn.Module, opt: optim.Optimizer, train_data: DataLoader, val_data
 
 
 def main():
-    pass
+    Net = m.VideoPrint(inch=3, depth=25)
+    crt = utils.OneClassLoss(batch_size=100, pairs=2, reg=0.1)
+    opt = optim.Adam(params=Net.parameters(), lr=3e-3)
+    
+    
 
 
 

@@ -68,7 +68,7 @@ class VideoNoiseSet(Dataset):
         imgs = os.listdir(imgspath)
         imgs = cfg.ds_rm(imgs)
         subimgs = random.sample(imgs, 12)
-        img12 = [cv2.imread(os.path.join(imgspath, i)) for i in subimgs]
+        img12 = [cv2.imread(os.path.join(imgspath, i))/255 for i in subimgs]
         img12crop = [self.crop(img=im, h=h, w=w) for im in img12]
         for j in range(0, 12, 3):
             img12crop[j][:, :, 0] = img12crop[j+1][:, :, 1]
@@ -102,7 +102,12 @@ class VideoNoiseSet(Dataset):
 
 
 
-    
+def createdl():
+    traindata = VideoNoiseSet(datapath='traindata')
+    testdata = VideoNoiseSet(datapath='testdata')
+    trainl = DataLoader(dataset=traindata, batch_size=1)
+    testl = DataLoader(dataset=testdata, batch_size=1)
+    return trainl, testl
 
 
 
@@ -117,11 +122,10 @@ def main():
     path = cfg.paths['data']
     temp = datasettemp(iframefolders=path)
    
-    dd = VideoNoiseSet(datapath=cfg.paths['iframes'])
-    print(len(dd))
-    x1, x2 = dd[0]
-    print(x1.shape, x2.shape)
-    print(x1[0, 0])
+    # dd = VideoNoiseSet(datapath=cfg.paths['iframes'])
+    trainl, testl = createdl()
+    firstbatch = next(iter(testl))
+    print(firstbatch[0].shape, firstbatch[1].shape)
     
    
 

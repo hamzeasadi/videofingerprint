@@ -10,6 +10,8 @@ paths = dict(
     root=root, data=data, model=os.path.join(data, 'model'), 
     videos=os.path.join(data, 'videos'), iframes=os.path.join(data, 'iframes'),
     patches=os.path.join(data, 'patches'),
+    traindata=os.path.join(data, 'iframes', 'traindata'),
+    testdata=os.path.join(data, 'iframes', 'testdata'),
 
 )
 
