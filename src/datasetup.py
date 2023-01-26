@@ -118,7 +118,9 @@ def main():
     temp = datasettemp(iframefolders=path)
    
     dd = VideoNoiseSet(datapath=cfg.paths['iframes'])
-    dd[0]
+    x1, x2 = dd[0]
+    print(x1.shape, x2.shape)
+    # for 
    
 
 if __name__ == "__main__":
