@@ -30,8 +30,14 @@ def createpatches(srcpath, trgpath):
         for iframe in srciframes:
             iframepath = os.path.join(srciframefolderpath, iframe)
             img = cv2.imread(iframepath)
-            print(img.shape, srciframefolder)
-            break
+            h, w, c = img.shape
+            hc, wc = h//2, w//2
+            H, W = 720, 1280
+            if h>w:
+                os.remove(iframepath)
+            else:
+                newimg = img[hc-H//2:hc+H//2, wc-W//2:wc+W//2, :]
+                cv2.imwrite(filename=iframepath, img=newimg)
 
 
 
