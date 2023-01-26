@@ -88,7 +88,7 @@ class OneClassLoss(nn.Module):
         # dist_mtx = euclidean_distance_matrix(x)
         # logits = self.create_pairs(distmtx=dist_mtx)
         Dist  = torch.linalg.matrix_norm(torch.subtract(x1[0], x2)).squeeze()
-        Y = torch.range(start=0, end=self.bs-1, dtype=torch.LongTensor, device=dev)
+        Y = torch.range(start=0, end=self.bs-1, dtype=torch.long, device=dev)
         for i in range(1, self.bs):
             dist = torch.linalg.matrix_norm(torch.subtract(x1[i], x2)).squeeze()
             Dist = torch.vstack((Dist, dist))
