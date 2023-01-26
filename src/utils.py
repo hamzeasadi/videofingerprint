@@ -54,7 +54,7 @@ def computemask(b, g):
     return masks, label
   
 def calc_psd(x):
-    x = x.squeeze()
+    # x = x.squeeze()
     dft = torch.fft.fft2(x)
     avgpsd =  torch.mean(torch.mul(dft, dft.conj()).real, dim=0)
     r = torch.mean(torch.log(avgpsd)) - torch.log(torch.mean(avgpsd))
@@ -82,7 +82,7 @@ class OneClassLoss(nn.Module):
         return t
 
     def forward(self, x):
-        dist_mtx = euclidean_distance_matrix(x.squeeze())
+        dist_mtx = euclidean_distance_matrix(x)
         logits = self.create_pairs(distmtx=dist_mtx)
         return self.criterion(logits, self.labels) - self.reg*calc_psd(x)
 

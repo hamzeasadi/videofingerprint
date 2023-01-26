@@ -30,7 +30,7 @@ class VideoPrint(nn.Module):
     def forward(self, x1, x2):
         out1 = self.noisext(x1)
         out2 = self.noisext(x2)
-        
+        # out = torch.cat((out1, out2), dim=0)
         return out1, out2
 
 
