@@ -27,9 +27,11 @@ class VideoPrint(nn.Module):
         fullmodel = nn.Sequential(*midelayers)
         return fullmodel
 
-    def forward(self, x):
-        return self.noisext(x)
-
+    def forward(self, x1, x2):
+        out1 = self.noisext(x1)
+        out2 = self.noisext(x2)
+        out = torch.cat((out1, out2), dim=0)
+        return out
 
 
 

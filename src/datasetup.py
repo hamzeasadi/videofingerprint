@@ -68,11 +68,11 @@ class VideoNoiseSet(Dataset):
         imgs = os.listdir(imgspath)
         imgs = cfg.ds_rm(imgs)
         subimgs = random.sample(imgs, 12)
-        img12 = [cv2.imread(os.path.join(imgspath, i)) for i in subimgs]
+        img12 = [cv2.imread(os.path.join(imgspath, i))/255 for i in subimgs]
         img12crop = [self.crop(img=im, h=h, w=w) for im in img12]
         for j in range(0, 12, 3):
-            img12crop[j][:, :, 1] = img12crop[j+1][:, :, 0]
-            img12crop[j][:, :, 2] = img12crop[j+2][:, :, 0]
+            img12crop[j][:, :, 0] = img12crop[j+1][:, :, 1]
+            img12crop[j][:, :, 2] = img12crop[j+2][:, :, 1]
         img1 = torch.cat((torch.from_numpy(img12crop[0]).permute(2, 0, 1), coord), dim=0).unsqueeze(dim=0)
         img2 = torch.cat((torch.from_numpy(img12crop[3]).permute(2, 0, 1), coord), dim=0).unsqueeze(dim=0)
         img3 = torch.cat((torch.from_numpy(img12crop[6]).permute(2, 0, 1), coord), dim=0).unsqueeze(dim=0)
@@ -121,6 +121,7 @@ def main():
     print(len(dd))
     x1, x2 = dd[0]
     print(x1.shape, x2.shape)
+    print(x1[0, 0])
     
    
 
