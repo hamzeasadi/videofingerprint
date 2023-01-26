@@ -103,8 +103,8 @@ class VideoNoiseSet(Dataset):
 
 
 def createdl():
-    traindata = VideoNoiseSet(datapath='traindata')
-    testdata = VideoNoiseSet(datapath='testdata')
+    traindata = VideoNoiseSet(datapath=cfg.paths['traindata'])
+    testdata = VideoNoiseSet(datapath=cfg.paths['testdata'])
     trainl = DataLoader(dataset=traindata, batch_size=1)
     testl = DataLoader(dataset=testdata, batch_size=1)
     return trainl, testl
