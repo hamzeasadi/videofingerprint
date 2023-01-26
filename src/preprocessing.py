@@ -20,6 +20,18 @@ def iframeextractionvideo(videopath, trgpath):
             command = f"ffmpeg -skip_frame nokey -i {videopathfile} -vsync vfr -frame_pts true -x264opts no-deblock {trgfolder}/video{i}out%d.bmp"
             os.system(command=command)
 
+def createpatches(srcpath, trgpath):
+    srciframefolders = os.listdir(srcpath)
+    srciframefolders = cfg.ds_rm(srciframefolders)
+    for srciframefolder in srciframefolders:
+        srciframefolderpath = os.path.join(srcpath, srciframefolder)
+        srciframes = os.listdir(srciframefolderpath)
+        srciframes = cfg.ds_rm(srciframes)
+        for iframe in srciframes:
+            iframepath = os.path.join(srciframefolderpath, iframe)
+            img = cv2.imread(iframepath)
+            print(img.shape, srciframefolder)
+            break
 
 
 
@@ -28,13 +40,13 @@ def iframeextractionvideo(videopath, trgpath):
 
 
 def main():
-    # path = '/Volumes/myDrive/Datasets/visionDataset copy/D01_Samsung_GalaxyS3Mini/D01_V_flat_move_0001.mp4'
-    # path = 'D09_V_indoor_move_0001.mov'
-    # path = 'D01_V_flat_move_0001.mp4'
-    # iframeextractionvideo(videopath=path)
-    srcpath = cfg.paths['videos']
-    trgpath = cfg.paths['iframes']
-    iframeextractionvideo(videopath=srcpath, trgpath=trgpath)
+    # srcpath = cfg.paths['videos']
+    # trgpath = cfg.paths['iframes']
+    # iframeextractionvideo(videopath=srcpath, trgpath=trgpath)
+
+    srcpath = cfg.paths['iframes']
+    trgpath = cfg.paths['patches']
+    createpatches(srcpath=srcpath, trgpath=trgpath)
 
 if __name__ == '__main__':
     main()

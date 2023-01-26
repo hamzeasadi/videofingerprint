@@ -52,15 +52,24 @@ def computemask(b, g):
 
     return masks, label
   
+def calc_psd(x):
+    x = x.squeeze()
+    dft = torch.fft.fft2(x)
+    avgpsd =  torch.mean(torch.mul(dft, dft.conj()).real, dim=0)
+    r = torch.mean(torch.log(avgpsd)) - torch.log(torch.mean(avgpsd))
+    return r
+
+
 
 class OneClassLoss(nn.Module):
     """
     doc
     """
-    def __init__(self, batch_size=100, pairs=2) -> None:
+    def __init__(self, batch_size=100, pairs=2, reg=0.1) -> None:
         super().__init__()
         self.masks, self.labels = computemask(b=batch_size, g=pairs)
         self.bs = batch_size
+        self.reg = reg
         self.criterion = nn.CrossEntropyLoss()
 
     def create_pairs(self, distmtx):
@@ -72,11 +81,11 @@ class OneClassLoss(nn.Module):
         return t
 
     def forward(self, x):
-        print(x.shape)
-        
         dist_mtx = euclidean_distance_matrix(x.squeeze())
         logits = self.create_pairs(distmtx=dist_mtx)
-        return self.criterion(logits, self.labels)
+        return self.criterion(logits, self.labels) - self.reg*calc_psd(x)
+
+
 
 
 
@@ -86,7 +95,7 @@ class OneClassLoss(nn.Module):
 
 
 def main():
-    b = 100
+    b = 4
     g = 2
     x1 = torch.randn(size=(b, 1, 64, 64))
     x2 = torch.randn(size=(b, 1, 64, 64))
@@ -100,9 +109,9 @@ def main():
 
     print(loss)
 
-    # xf = torch.flatten(x, start_dim=1)
+ 
 
-    # distmtx = euclidean_distance_matrix(xf)
+
 
         
 
