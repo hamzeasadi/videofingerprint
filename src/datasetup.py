@@ -87,16 +87,18 @@ class VideoNoiseSet(Dataset):
         return len(self.patches)
 
     def __getitem__(self, index):
-        subpatches = random.sample(self.patches, 100)
-        for i in range(50):
+        subpatches = random.sample(self.patches, 50)
+      
+        patch = self.temp[subpatches[0]]
+        X1, X2 = self.get4path(patchid=patch)
+        for i in range(1, 50):
             patch = self.temp[subpatches[i]]
             pair1, pair2 = self.get4path(patchid=patch)
-            print(pair1.shape)
-            p1n = pair1.numpy()
-            for i in range(5):
-                cv2.imshow('crop', p1n[0, i])
-                cv2.waitKey(0)
-            break
+            X1 = torch.cat((X1, pair1), dim=0)
+            X2 = torch.cat((X2, pair2), dim=0)
+
+        return X1, X2
+           
 
 
 
