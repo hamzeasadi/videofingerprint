@@ -72,7 +72,10 @@ class VideoNoiseSet(Dataset):
         img2 = torch.cat((torch.from_numpy(img12crop[3]).permute(2, 0, 1).to(dev), coord), dim=0).unsqueeze(dim=0)
         img3 = torch.cat((torch.from_numpy(img12crop[6]).permute(2, 0, 1).to(dev), coord), dim=0).unsqueeze(dim=0)
         img4 = torch.cat((torch.from_numpy(img12crop[9]).permute(2, 0, 1).to(dev), coord), dim=0).unsqueeze(dim=0)
-
+        img1 = img1.float()
+        img2 = img2.float()
+        img3 = img3.float()
+        img4 = img4.float()
         pairone = torch.cat((img1, img2), dim=0)
         pairtwo = torch.cat((img3, img4), dim=0)
         
