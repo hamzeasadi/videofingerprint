@@ -26,11 +26,6 @@ def datasettemp(iframefolders):
 
 
 
-def get2patch(folderpath, H=720, W=1280):
-
-    pass
-
-
 
 class VideoNoiseSet(Dataset):
     def __init__(self, datapath: str) -> None:

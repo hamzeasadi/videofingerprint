@@ -14,11 +14,12 @@ def train_step(model: nn.Module, data: DataLoader, criterion: nn.Module, optimiz
     epoch_error = 0
     l = len(data)
     model.train()
-    for i, (X, Y) in enumerate(data):
-        X = X.to(dev)
-        Y = Y.to(dev)
-        out, noise = model(X)
-        loss = criterion(out, Y)
+    for i, (X1, X2) in enumerate(data):
+        X1 = X1.to(dev).squeeze()
+        X2 = X2.to(dev).squeeze()
+        out1, out2 = model(X1, X2)
+        out = torch.cat((out1, out2), dim=0)
+        loss = criterion(out)
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
@@ -32,13 +33,14 @@ def val_step(model: nn.Module, data: DataLoader, criterion: nn.Module):
     l = len(data)
     model.eval()
     with torch.no_grad():
-        for i, (X, Y) in enumerate(data):
-            X = X.to(dev)
-            Y = Y.to(dev)
-            out, noise = model(X)
-            loss = criterion(out, Y)
+        for i, (X1, X2) in enumerate(data):
+            X1 = X1.to(dev).squeeze()
+            X2 = X2.to(dev).squeeze()
+            out1, out2 = model(X1, X2)
+            out = torch.cat((out1, out2), dim=0)
+            loss = criterion(out)
             epoch_error += loss.item()
-            # break
+        # break
     return epoch_error/l
 
 
