@@ -63,6 +63,7 @@ class VideoNoiseSet(Dataset):
 
     def get4path(self, patchid, H=720, W=1280):
         folder, h, w = patchid
+        coord = self.creatcords(h=h, w=w, H=H, W=W)
         imgspath = os.path.join(self.datapath, folder)
         imgs = os.listdir(imgspath)
         imgs = cfg.ds_rm(imgs)
@@ -72,9 +73,13 @@ class VideoNoiseSet(Dataset):
         for j in range(0, 12, 3):
             img12crop[j][:, :, 1] = img12crop[j+1][:, :, 0]
             img12crop[j][:, :, 2] = img12crop[j+2][:, :, 0]
-        
-        pairone = torch.cat((torch.from_numpy(img12crop[0]).unsqueeze(dim=0), torch.from_numpy(img12crop[3]).unsqueeze(dim=0)), dim=0)
-        pairtwo = torch.cat((torch.from_numpy(img12crop[6]).unsqueeze(dim=0), torch.from_numpy(img12crop[9]).unsqueeze(dim=0)), dim=0)
+        img1 = torch.cat((torch.from_numpy(img12crop[0]).permute(2, 0, 1), coord), dim=0).unsqueeze(dim=0)
+        img2 = torch.cat((torch.from_numpy(img12crop[3]).permute(2, 0, 1), coord), dim=0).unsqueeze(dim=0)
+        img3 = torch.cat((torch.from_numpy(img12crop[6]).permute(2, 0, 1), coord), dim=0).unsqueeze(dim=0)
+        img4 = torch.cat((torch.from_numpy(img12crop[9]).permute(2, 0, 1), coord), dim=0).unsqueeze(dim=0)
+
+        pairone = torch.cat((img1, img2), dim=0)
+        pairtwo = torch.cat((img3, img4), dim=0)
         
         return pairone, pairtwo
 
