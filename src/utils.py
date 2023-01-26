@@ -68,23 +68,32 @@ class OneClassLoss(nn.Module):
     """
     def __init__(self, batch_size=100, pairs=2, reg=0.1) -> None:
         super().__init__()
-        self.masks, self.labels = computemask(b=batch_size, g=pairs)
+        # self.masks, self.labels = computemask(b=batch_size, g=pairs)
         self.bs = batch_size
         self.reg = reg
         self.criterion = nn.CrossEntropyLoss()
 
-    def create_pairs(self, distmtx):
-        t = torch.vstack((distmtx[0][self.masks[0]], distmtx[0][self.masks[1]], distmtx[0][self.masks[2]]))
-        # print(t)
-        for i in range(3, 6*self.bs, 3):
-            row = distmtx[i//3]
-            t = torch.vstack((t, row[self.masks[i]], row[self.masks[i+1]], row[self.masks[i+2]])) 
-        return t
+    # def create_pairs(self, distmtx):
+    #     t = torch.vstack((distmtx[0][self.masks[0]], distmtx[0][self.masks[1]], distmtx[0][self.masks[2]]))
+    #     # print(t)
+    #     for i in range(3, 6*self.bs, 3):
+    #         row = distmtx[i//3]
+    #         t = torch.vstack((t, row[self.masks[i]], row[self.masks[i+1]], row[self.masks[i+2]])) 
+    #     return t
 
-    def forward(self, x):
-        dist_mtx = euclidean_distance_matrix(x)
-        logits = self.create_pairs(distmtx=dist_mtx)
-        return self.criterion(logits, self.labels) #- self.reg*calc_psd(x)
+    
+
+    def forward(self, x1, x2):
+        x = torch.cat((x1, x2), dim=0).squeeze()
+        # dist_mtx = euclidean_distance_matrix(x)
+        # logits = self.create_pairs(distmtx=dist_mtx)
+        Dist  = torch.linalg.matrix_norm(torch.subtract(x1[0], x2)).squeeze()
+        Y = torch.range(start=0, end=self.bs, dtype=torch.float32, device=dev)
+        for i in range(1, self.bs):
+            dist = torch.linalg.matrix_norm(torch.subtract(x1[i], x2)).squeeze()
+            Dist = torch.vstack((Dist, dist))
+
+        return self.criterion(Dist, Y) - self.reg*calc_psd(x)
 
 
 
@@ -113,18 +122,20 @@ class KeepTrack():
 def main():
     b = 4
     g = 2
-    x1 = torch.randn(size=(b, 1, 64, 64))
-    x2 = torch.randn(size=(b, 1, 64, 64))
+    # x1 = torch.randn(size=(b, 1, 64, 64))
+    # x2 = torch.randn(size=(b, 1, 64, 64))
 
-    # x = torch.cat((x1, x2), dim=0).squeeze()
-    x = torch.cat((x1, x2), dim=0)
+    x1 = torch.randn(size=(4, 1, 10, 10))
+    x2 = 2*torch.ones(size=(4, 1, 10, 10))
+    Dist  = torch.linalg.matrix_norm(torch.subtract(x1[0], x2)).squeeze()
+    Y = torch.range(start=0, end=4, dtype=torch.float32, device=dev)
+    for i in range(1, 4):
+        dist = torch.linalg.matrix_norm(torch.subtract(x1[0], x2)).squeeze()
+        Dist = torch.vstack((Dist, dist))
+   
 
-    crosloss = OneClassLoss(batch_size=b, pairs=g)
-
-    loss = crosloss(x)
-
-    print(loss)
-
+    print(Dist.shape)
+    print(Y)
  
 
 

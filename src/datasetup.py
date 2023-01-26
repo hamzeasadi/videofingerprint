@@ -62,34 +62,34 @@ class VideoNoiseSet(Dataset):
         imgspath = os.path.join(self.datapath, folder)
         imgs = os.listdir(imgspath)
         imgs = cfg.ds_rm(imgs)
-        subimgs = random.sample(imgs, 12)
+        subimgs = random.sample(imgs, 6)
         img12 = [cv2.imread(os.path.join(imgspath, i))/255 for i in subimgs]
         img12crop = [self.crop(img=im, h=h, w=w) for im in img12]
-        for j in range(0, 12, 3):
+        for j in range(0, 6, 3):
             img12crop[j][:, :, 0] = img12crop[j+1][:, :, 1]
             img12crop[j][:, :, 2] = img12crop[j+2][:, :, 1]
         img1 = torch.cat((torch.from_numpy(img12crop[0]).permute(2, 0, 1).to(dev), coord), dim=0).unsqueeze(dim=0)
         img2 = torch.cat((torch.from_numpy(img12crop[3]).permute(2, 0, 1).to(dev), coord), dim=0).unsqueeze(dim=0)
-        img3 = torch.cat((torch.from_numpy(img12crop[6]).permute(2, 0, 1).to(dev), coord), dim=0).unsqueeze(dim=0)
-        img4 = torch.cat((torch.from_numpy(img12crop[9]).permute(2, 0, 1).to(dev), coord), dim=0).unsqueeze(dim=0)
+        # img3 = torch.cat((torch.from_numpy(img12crop[6]).permute(2, 0, 1).to(dev), coord), dim=0).unsqueeze(dim=0)
+        # img4 = torch.cat((torch.from_numpy(img12crop[9]).permute(2, 0, 1).to(dev), coord), dim=0).unsqueeze(dim=0)
         img1 = img1.float()
         img2 = img2.float()
-        img3 = img3.float()
-        img4 = img4.float()
-        pairone = torch.cat((img1, img2), dim=0)
-        pairtwo = torch.cat((img3, img4), dim=0)
+        # img3 = img3.float()
+        # img4 = img4.float()
+        # pairone = torch.cat((img1, img2), dim=0)
+        # pairtwo = torch.cat((img3, img4), dim=0)
         
-        return pairone, pairtwo
+        return img1, img2
 
     def __len__(self):
         return len(self.patches)
 
     def __getitem__(self, index):
-        subpatches = random.sample(self.patches, 50)
+        subpatches = random.sample(self.patches, 100)
       
         patch = self.temp[subpatches[0]]
         X1, X2 = self.get4path(patchid=patch)
-        for i in range(1, 50):
+        for i in range(1, 100):
             patch = self.temp[subpatches[i]]
             pair1, pair2 = self.get4path(patchid=patch)
             X1 = torch.cat((X1, pair1), dim=0)

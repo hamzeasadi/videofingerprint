@@ -19,8 +19,8 @@ def train_step(model: nn.Module, data: DataLoader, criterion: nn.Module, optimiz
             X1 = X1.to(dev).squeeze()
             X2 = X2.to(dev).squeeze()
             out1, out2 = model(X1, X2)
-            out = torch.cat((out1, out2), dim=0).squeeze()
-            loss = criterion(out)
+            # out = torch.cat((out1, out2), dim=0).squeeze()
+            loss = criterion(out1, out2)
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
@@ -38,8 +38,8 @@ def val_step(model: nn.Module, data: DataLoader, criterion: nn.Module):
             X1 = X1.to(dev).squeeze()
             X2 = X2.to(dev).squeeze()
             out1, out2 = model(X1, X2)
-            out = torch.cat((out1, out2), dim=0).squeeze()
-            loss = criterion(out)
+            # out = torch.cat((out1, out2), dim=0).squeeze()
+            loss = criterion(out1, out2)
             epoch_error += loss.item()
         # break
     return epoch_error/l
