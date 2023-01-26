@@ -92,6 +92,10 @@ class VideoNoiseSet(Dataset):
             patch = self.temp[subpatches[i]]
             pair1, pair2 = self.get4path(patchid=patch)
             print(pair1.shape)
+            p1n = pair1.numpy()
+            for i in range(5):
+                cv2.imshow('crop', p1n[0, i])
+                cv2.waitKey(0)
             break
 
 
