@@ -68,10 +68,10 @@ class VideoNoiseSet(Dataset):
         for j in range(0, 12, 3):
             img12crop[j][:, :, 0] = img12crop[j+1][:, :, 1]
             img12crop[j][:, :, 2] = img12crop[j+2][:, :, 1]
-        img1 = torch.cat((torch.from_numpy(img12crop[0]).permute(2, 0, 1), coord), dim=0).unsqueeze(dim=0)
-        img2 = torch.cat((torch.from_numpy(img12crop[3]).permute(2, 0, 1), coord), dim=0).unsqueeze(dim=0)
-        img3 = torch.cat((torch.from_numpy(img12crop[6]).permute(2, 0, 1), coord), dim=0).unsqueeze(dim=0)
-        img4 = torch.cat((torch.from_numpy(img12crop[9]).permute(2, 0, 1), coord), dim=0).unsqueeze(dim=0)
+        img1 = torch.cat((torch.from_numpy(img12crop[0]).permute(2, 0, 1).to(dev), coord), dim=0).unsqueeze(dim=0)
+        img2 = torch.cat((torch.from_numpy(img12crop[3]).permute(2, 0, 1).to(dev), coord), dim=0).unsqueeze(dim=0)
+        img3 = torch.cat((torch.from_numpy(img12crop[6]).permute(2, 0, 1).to(dev), coord), dim=0).unsqueeze(dim=0)
+        img4 = torch.cat((torch.from_numpy(img12crop[9]).permute(2, 0, 1).to(dev), coord), dim=0).unsqueeze(dim=0)
 
         pairone = torch.cat((img1, img2), dim=0)
         pairtwo = torch.cat((img3, img4), dim=0)
