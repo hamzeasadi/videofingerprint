@@ -84,7 +84,7 @@ class OneClassLoss(nn.Module):
     def forward(self, x):
         dist_mtx = euclidean_distance_matrix(x)
         logits = self.create_pairs(distmtx=dist_mtx)
-        return self.criterion(logits, self.labels) - self.reg*calc_psd(x)
+        return self.criterion(logits, self.labels) #- self.reg*calc_psd(x)
 
 
 
