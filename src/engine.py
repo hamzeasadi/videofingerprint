@@ -14,7 +14,7 @@ def train_step(model: nn.Module, data: DataLoader, criterion: nn.Module, optimiz
     epoch_error = 0
     l = len(data)
     model.train()
-    with torch.autograd.detect_anomaly():
+    with torch.autograd.detect_anomaly(True):
         for i, (X1, X2) in enumerate(data):
             X1 = X1.to(dev).squeeze()
             X2 = X2.to(dev).squeeze()
