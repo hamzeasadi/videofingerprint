@@ -32,11 +32,16 @@ def coords(H, W):
 def read_oneimage(imgpath):
     img = (cv2.imread(imgpath)/255)
     imgt = torch.from_numpy(img).permute(2, 0, 1)
-    return imgt
+    coord = coords(H=720, W=1280)
+    imgt = torch.cat((imgt, coord), dim=0)
+    return imgt.unsqueeze(dim=0)
 
 
 def main():
     kt = utils.KeepTrack(path=cfg.paths['model'])
+    mn = 'videofingerprint1_0.pt'
+    mn1 = 'videofingerprint1_1.pt'
+
     imgname1 = 'video7out1047.bmp'
     imgname2 = 'video7out1417.bmp'
     imgname3 = 'video6out154.bmp'
