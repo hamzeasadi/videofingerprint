@@ -36,7 +36,7 @@ def read_oneimage(imgpath):
     imgt = torch.from_numpy(img).permute(2, 0, 1)
     coord = coords(H=720, W=1280)
     imgt = torch.cat((imgt, coord), dim=0)
-    return imgt.unsqueeze(dim=0), img
+    return imgt.unsqueeze(dim=0).float(), img
 
 
 def main():
