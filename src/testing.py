@@ -80,7 +80,7 @@ def main():
         axs[i, 1].imshow(out[i])
         axs[i, 1].axis('off')
 
-    plt.subplots_adjust(wspace=0.1, wspace=00.1)
+    plt.subplots_adjust(wspace=0.1, hspace=0.1)
     plt.show()
 
 
