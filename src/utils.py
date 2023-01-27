@@ -87,6 +87,7 @@ class OneClassLoss(nn.Module):
         x = torch.cat((x1, x2), dim=0).squeeze()
         # dist_mtx = euclidean_distance_matrix(x)
         # logits = self.create_pairs(distmtx=dist_mtx)
+
         Dist  = torch.linalg.matrix_norm(torch.subtract(x1[0], x2)).squeeze()
         Y = torch.range(start=0, end=self.bs-1, dtype=torch.long, device=dev)
         for i in range(1, self.bs):
@@ -125,18 +126,12 @@ def main():
     # x1 = torch.randn(size=(b, 1, 64, 64))
     # x2 = torch.randn(size=(b, 1, 64, 64))
 
-    x1 = torch.randn(size=(4, 1, 10, 10))
-    x2 = 2*torch.ones(size=(4, 1, 10, 10))
-    Dist  = torch.linalg.matrix_norm(torch.subtract(x1[0], x2)).squeeze()
-    Y = torch.range(start=0, end=4, dtype=torch.float32, device=dev)
-    for i in range(1, 4):
-        dist = torch.linalg.matrix_norm(torch.subtract(x1[0], x2)).squeeze()
-        Dist = torch.vstack((Dist, dist))
-   
+    x1 = torch.randn(size=(100, 1, 10, 10))
+    x2 = 2*torch.ones(size=(100, 1, 10, 10))
+  
+    ll = OneClassLoss()
+    ll(x1, x2)
 
-    print(Dist.shape)
-    print(Y)
- 
 
 
 
