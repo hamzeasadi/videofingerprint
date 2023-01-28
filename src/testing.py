@@ -42,7 +42,7 @@ def read_oneimage(imgpath):
 def main():
     kt = utils.KeepTrack(path=cfg.paths['model'])
     mn = 'videofingerprint1_0.pt'
-    mn1 = 'videofingerprint1_1.pt'
+    mn1 = 'videofingerprint1_2.pt'
 
     imgname1 = 'video7out1047.bmp'
     imgname2 = 'video7out1417.bmp'
@@ -53,9 +53,9 @@ def main():
     imgt1, img1 = read_oneimage(iframepath1)
     imgt2, img2 = read_oneimage(iframepath2)
     
-    print(imgt1.shape, imgt2.shape)
-    print(imgt1)
-    print(imgt2)
+    # print(imgt1.shape, imgt2.shape)
+    # print(imgt1)
+    # print(imgt2)
    
     Net = m.VideoPrint(inch=3, depth=25)
     state = kt.load_ckp(fname=mn)
@@ -65,8 +65,8 @@ def main():
     print(state['minerror'])
     out1, out2 = Net(imgt1, imgt2)
 
-    out1 = out1.squeeze().numpy()
-    out2 = out2.squeeze().numpy()
+    out1 = out1.squeeze().detach().numpy()
+    out2 = out2.squeeze().detach().numpy()
     
     fig, axs = plt.subplots(nrows=2, ncols=2, figsize=(12, 16))
 
@@ -81,7 +81,8 @@ def main():
         axs[i, 1].axis('off')
 
     plt.subplots_adjust(wspace=0.1, hspace=0.1)
-    plt.show()
+    plt.savefig('output.png')
+    # plt.show()
 
 
 
