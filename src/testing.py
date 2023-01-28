@@ -56,7 +56,7 @@ def main():
     
    
     Net = m.VideoPrint(inch=3, depth=25)
-    state = kt.load_ckp(fname=mn)
+    state = kt.load_ckp(fname=mn1)
     Net.to(dev)
     Net.load_state_dict(state['model'])
     Net.eval()
