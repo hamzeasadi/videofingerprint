@@ -39,7 +39,7 @@ def createsample(folderpath):
     imgs = []
     for i, imgname in enumerate(subimages):
         imgpath = os.path.join(folderpath, imgname)
-        img = cv2.imread(imgpath)
+        img = cv2.imread(imgpath)/255
         if i%2==0:
             img[100:200, 200:300, :] = img[600:700, 1100:1200, :]
         imgt = torch.from_numpy(img).permute(2, 0, 1)
