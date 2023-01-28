@@ -53,9 +53,7 @@ def main():
     imgt1, img1 = read_oneimage(iframepath1)
     imgt2, img2 = read_oneimage(iframepath2)
     
-    # print(imgt1.shape, imgt2.shape)
-    # print(imgt1)
-    # print(imgt2)
+    
    
     Net = m.VideoPrint(inch=3, depth=25)
     state = kt.load_ckp(fname=mn)
@@ -75,14 +73,14 @@ def main():
     img = [img1, img2]
 
     for i in range(2):
-        axs[i, 0].imshow(img[i])
+        axs[i, 0].imshow(img[i], cmap='gray')
         axs[i, 0].axis('off')
-        axs[i, 1].imshow(out[i])
+        axs[i, 1].imshow(out[i], cmap='gray')
         axs[i, 1].axis('off')
 
     plt.subplots_adjust(wspace=0.1, hspace=0.1)
     plt.savefig('output.png')
-    # plt.show()
+    plt.show()
 
 
 
