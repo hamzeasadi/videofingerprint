@@ -4,7 +4,7 @@ from torch import nn as nn
 import model as m
 import utils
 import conf as cfg
-import os
+import os, random
 from torch import optim
 from torch.utils.data import DataLoader
 import engine
@@ -31,12 +31,23 @@ def coords(H, W):
     return coord
 
 
-def read_oneimage(imgpath):
-    img = (cv2.imread(imgpath)/255)
-    imgt = torch.from_numpy(img).permute(2, 0, 1)
-    coord = coords(H=720, W=1280)
-    imgt = torch.cat((imgt, coord), dim=0)
-    return imgt.unsqueeze(dim=0).float(), img
+
+def createsample(folderpath):
+    listimgs = os.listdir(folderpath)
+    listimgs = cfg.ds_rm(listimgs)
+    subimages = random.sample(listimgs, 4)
+    imgs = []
+    for i, imgname in enumerate(subimages):
+        imgpath = os.path.join(folderpath, imgname)
+        img = cv2.imread(imgpath)
+        if i%2==0:
+            img[100:200, 200:400, :] = img[-100:-200, -200:-400, :]
+        imgt = torch.from_numpy(img).permute(2, 0, 1)
+        coord = coords(H=720, W=1280)
+        imgt = torch.cat((imgt, coord), dim=0) 
+        imgs.append((img, imgt))
+    
+    return imgs
 
 
 def main():
@@ -44,38 +55,29 @@ def main():
     mn = 'videofingerprint1_0.pt'
     mn1 = 'videofingerprint1_2.pt'
 
-    imgname1 = 'video7out1047.bmp'
-    imgname2 = 'video7out1417.bmp'
-    imgname3 = 'video6out154.bmp'
-    iframepath1 = os.path.join(cfg.paths['testdata'], 'D16_Huawei_P9Lite', imgname3)
-    iframepath2 = os.path.join(cfg.paths['testdata'], 'D16_Huawei_P9Lite', imgname1)
+    folderpath = os.path.join(cfg.paths['testdata'], 'D16_Huawei_P9Lite')
+    imgpairs = createsample(folderpath=folderpath)
 
-    imgt1, img1 = read_oneimage(iframepath1)
-    imgt2, img2 = read_oneimage(iframepath2)
-    
-    
-   
     Net = m.VideoPrint(inch=3, depth=25)
     state = kt.load_ckp(fname=mn1)
     Net.to(dev)
     Net.load_state_dict(state['model'])
     Net.eval()
-    print(state['minerror'])
-    out1, out2 = Net(imgt1, imgt2)
 
-    out1 = out1.squeeze().detach().numpy()
-    out2 = out2.squeeze().detach().numpy()
+    Noises = []
+    for i in range(0, 4, 2):
+        img1, img2 = imgpairs[i][1], imgpairs[i+1][1]
+        out1, out2 = Net(img1, img2)
+        Noises.append(out1.squeeze().detach().numpy())
+        Noises.append(out2.squeeze().detach().numpy())
+
     
-    fig, axs = plt.subplots(nrows=2, ncols=2, figsize=(12, 16))
+    fig, axs = plt.subplots(nrows=4, ncols=2, figsize=(10, 9))
 
-
-    out = [out1, out2]
-    img = [img1, img2]
-
-    for i in range(2):
-        axs[i, 0].imshow(img[i], cmap='gray')
+    for i in range(4):
+        axs[i, 0].imshow(imgpairs[i][0], cmap='gray')
         axs[i, 0].axis('off')
-        axs[i, 1].imshow(out[i], cmap='gray')
+        axs[i, 1].imshow(Noises[i], cmap='gray')
         axs[i, 1].axis('off')
 
     plt.subplots_adjust(wspace=0.1, hspace=0.1)
