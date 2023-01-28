@@ -41,7 +41,7 @@ def createsample(folderpath):
         imgpath = os.path.join(folderpath, imgname)
         img = cv2.imread(imgpath)
         if i%2==0:
-            img[100:200, 200:400, :] = img[-100:-200, -200:-400, :]
+            img[100:200, 200:400, :] = img[600:700, 1100:1200, :]
         imgt = torch.from_numpy(img).permute(2, 0, 1)
         coord = coords(H=720, W=1280)
         imgt = torch.cat((imgt, coord), dim=0) 
